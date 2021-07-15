@@ -56,12 +56,13 @@ class Utils implements IUtils {
   };
 
   getMimeType = (file: string): string => {
-    const ext = this.getExtension(file);
-    const extension = '.' + ext.toLowerCase();
+    const fileExtension = this.getExtension(file);
+    const fileExtensionClean = '.' + fileExtension.toLowerCase();
     const type = Object.entries(MimeTypes).find(
-      (mime) => mime[0] === extension
+      ([extension]) => extension === fileExtensionClean
     );
-    if (type) return type[0];
+
+    if (type) return type[1];
     return '';
   };
 }
