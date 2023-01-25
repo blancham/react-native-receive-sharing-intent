@@ -3,17 +3,20 @@ package com.reactnativereceivesharingintent;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
-
-
 import android.os.Build;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
 
-public class ReceiveSharingIntentModule extends ReactContextBaseJavaModule {
+public class ReceiveSharingIntentModule extends ReactContextBaseJavaModule implements ActivityEventListener {
   public final String Log_Tag = "ReceiveSharingIntent";
 
   private final ReactApplicationContext reactContext;
@@ -25,10 +28,15 @@ public class ReceiveSharingIntentModule extends ReactContextBaseJavaModule {
     this.reactContext = reactContext;
     Application applicationContext = (Application) reactContext.getApplicationContext();
     receiveSharingIntentHelper = new ReceiveSharingIntentHelper(applicationContext);
+    reactContext.addActivityEventListener(this);
   }
 
+  @Override
+  public void onActivityResult(Activity activity, int i, int i1, @Nullable Intent intent) {
+  }
 
-  protected void onNewIntent(Intent intent) {
+  @Override
+  public void onNewIntent(@NonNull Intent intent) {
     Activity mActivity = getCurrentActivity();
     if(mActivity == null) { return; }
     oldIntent = mActivity.getIntent();
