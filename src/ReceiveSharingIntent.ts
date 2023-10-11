@@ -10,7 +10,6 @@ const { ReceiveSharingIntent } = NativeModules;
 class ReceiveSharingIntentModule implements IReceiveSharingIntent {
   private isIos: boolean = Platform.OS === 'ios';
   private utils: IUtils = new Utils();
-  private isClear: boolean = false;
 
   getReceivedFiles(
     handler: Function,
@@ -23,29 +22,29 @@ class ReceiveSharingIntentModule implements IReceiveSharingIntent {
           if (!res) {
             return handler([]);
           }
-          if (res.startsWith(`${protocol}://dataUrl`) && !this.isClear) {
+          if (res.startsWith(`${protocol}://dataUrl`)) {
             this.getFileNames(handler, errorHandler, res);
           }
         })
         .catch(() => {});
       Linking.addEventListener('url', (res: any) => {
         const url = res ? res.url : '';
-        if (url.startsWith(`${protocol}://dataUrl`) && !this.isClear) {
+        if (url.startsWith(`${protocol}://dataUrl`)) {
           this.getFileNames(handler, errorHandler, res.url);
         }
       });
     } else {
       AppState.addEventListener('change', (status: string) => {
-        if (status === 'active' && !this.isClear) {
+        if (status === 'active') {
           this.getFileNames(handler, errorHandler, '');
         }
       });
-      if (!this.isClear) this.getFileNames(handler, errorHandler, '');
+      this.getFileNames(handler, errorHandler, '');
     }
   }
 
   clearReceivedFiles() {
-    this.isClear = true;
+    ReceiveSharingIntent.clearFileNames();
   }
 
   protected getFileNames(
