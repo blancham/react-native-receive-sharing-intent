@@ -31,7 +31,10 @@ public class ReceiveSharingIntentHelper {
     try {
       String action = intent.getAction();
       String type = intent.getType();
-      if(type == null) { return; }
+      if(type == null) {
+        promise.resolve(null);
+        return;
+      }
       if(!type.startsWith("text") && (Objects.equals(action, Intent.ACTION_SEND) || Objects.equals(action, Intent.ACTION_SEND_MULTIPLE))){
         WritableMap files = getMediaUris(intent,context);
         if(files == null) return;

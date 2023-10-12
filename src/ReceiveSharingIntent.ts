@@ -19,7 +19,10 @@ class ReceiveSharingIntentModule implements IReceiveSharingIntent {
     if (this.isIos) {
       Linking.getInitialURL()
         .then((res: any) => {
-          if (res && res.startsWith(`${protocol}://dataUrl`)) {
+          if (!res) {
+            return handler([]);
+          }
+          if (res.startsWith(`${protocol}://dataUrl`)) {
             this.getFileNames(handler, errorHandler, res);
           }
         })
@@ -59,6 +62,9 @@ class ReceiveSharingIntentModule implements IReceiveSharingIntent {
     } else {
       ReceiveSharingIntent.getFileNames()
         .then((fileObject: any) => {
+          if (!fileObject) {
+            return handler([]);
+          }
           let files = Object.keys(fileObject).map((k) => fileObject[k]);
           handler(files);
         })
