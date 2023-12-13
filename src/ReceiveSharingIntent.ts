@@ -19,11 +19,10 @@ class ReceiveSharingIntentModule implements IReceiveSharingIntent {
     if (this.isIos) {
       Linking.getInitialURL()
         .then((res: any) => {
-          if (!res) {
-            return handler([]);
-          }
-          if (res.startsWith(`${protocol}://dataUrl`)) {
+          if (res?.startsWith(`${protocol}://dataUrl`)) {
             this.getFileNames(handler, errorHandler, res);
+          } else {
+            return handler([]);
           }
         })
         .catch(() => {});
